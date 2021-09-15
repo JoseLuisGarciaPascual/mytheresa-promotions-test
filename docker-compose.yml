@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    container_name: web
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www/:/var/www/site
+      - ./nginx-config/default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - php
+  php:
+    container_name: php
+    build: ./dockerfiles/php
+    volumes:
+      - ./www/:/var/www/site
+    depends_on:
+      - database
+  database:
+    container_name: database
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=1234
+      - MYSQL_DATABASE=promotions
